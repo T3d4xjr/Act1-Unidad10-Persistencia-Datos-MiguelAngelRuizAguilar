@@ -1,0 +1,25 @@
+<resources>
+    <!-- Idiomas disponibles -->
+    <string-array name="idiomas">
+        <item>Español</item>
+        <item>Inglés</item>
+        <item>Francés</item>
+    </string-array>
+    <string-array name="idiomas_values">
+        <item>Español</item>
+        <item>Inglés</item>
+        <item>Francés</item>
+    </string-array>
+
+    <!-- Tipos de letra disponibles -->
+    <string-array name="letras">
+        <item>Sans-serif</item>
+        <item>Monospace</item>
+        <item>Serif</item>
+    </string-array>
+    <string-array name="letras_values">
+        <item>sans-serif</item>
+        <item>monospace</item>
+        <item>serif</item>
+    </string-array>
+</resources>

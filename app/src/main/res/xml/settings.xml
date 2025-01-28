@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="idioma"
+        android:title="Idioma"
+        android:summary="Selecciona el idioma"
+        android:defaultValue="Español"
+        android:entries="@array/idiomas"
+        android:entryValues="@array/idiomas_values"
+        android:inputType="none" />
+
+
+    <ListPreference
+        android:key="letra"
+        android:title="Tipo de letra"
+        android:summary="Selecciona el tipo de letra"
+        android:defaultValue="sans-serif"
+        android:entries="@array/letras"
+        android:entryValues="@array/letras_values"
+        android:inputType="none" />
+
+</PreferenceScreen>
