@@ -5,11 +5,13 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+
+import java.util.HashMap;
 
 public class PreferenciasActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class PreferenciasActivity extends AppCompatActivity {
     private Button btnModificar;
     private Button btnAplicar;
     private Button btnResetear;
+    private RelativeLayout layoutPrincipal; // Contenedor principal donde se aplicará el fondo
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -26,6 +29,8 @@ public class PreferenciasActivity extends AppCompatActivity {
     private String[] fondos = {"Charmander", "Bulbasaur", "Squirtle"};
     private String[] idiomas = {"Español", "Inglés", "Francés"};
     private String[] letras = {"Sans-serif", "Monospace", "Serif"};
+
+    private HashMap<String, HashMap<String, String>> traducciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +45,12 @@ public class PreferenciasActivity extends AppCompatActivity {
         btnAplicar = findViewById(R.id.btnAplicar);
         btnResetear = findViewById(R.id.btnResetear);
 
-        // Inicializar SharedPreferences (para los modos Pokémon)
+        // Inicializar SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
+
+        // Inicializar traducciones
+        inicializarTraducciones();
 
         // Crear adaptadores para los Spinners
         ArrayAdapter<String> adapterFondo = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fondos);
@@ -70,111 +78,128 @@ public class PreferenciasActivity extends AppCompatActivity {
         btnResetear.setOnClickListener(v -> resetearModo());
     }
 
-    // Cargar las preferencias previamente guardadas (solo para los modos Pokémon)
     private void cargarPreferencias() {
-        String fondo = sharedPreferences.getString("fondo", "charmander");
-        String idioma = sharedPreferences.getString("idioma", "español");
-        String letra = sharedPreferences.getString("letra", "sans-serif");
+        String fondo = sharedPreferences.getString("fondo", "Charmander");
+        String idioma = sharedPreferences.getString("idioma", "Español");
+        String letra = sharedPreferences.getString("letra", "Sans-serif");
 
         spinnerFondo.setSelection(getIndex(fondo, fondos));
         spinnerIdioma.setSelection(getIndex(idioma, idiomas));
         spinnerTipoLetra.setSelection(getIndex(letra, letras));
+
+        actualizarFondo(fondo);
+        aplicarTipoLetra(letra);
     }
 
-    // Guardar las preferencias seleccionadas por el usuario
     private void guardarPreferencias() {
-        String fondoSeleccionado = spinnerFondo.getSelectedItem().toString().toLowerCase();
-        String idiomaSeleccionado = spinnerIdioma.getSelectedItem().toString().toLowerCase();
+        String fondoSeleccionado = spinnerFondo.getSelectedItem().toString();
+        String idiomaSeleccionado = spinnerIdioma.getSelectedItem().toString();
         String letraSeleccionada = spinnerTipoLetra.getSelectedItem().toString();
 
         editor.putString("fondo", fondoSeleccionado);
         editor.putString("idioma", idiomaSeleccionado);
         editor.putString("letra", letraSeleccionada);
         editor.apply();
+
+        Toast.makeText(this, "Preferencias guardadas", Toast.LENGTH_SHORT).show();
     }
 
-    // Aplicar los cambios y actualizar la interfaz de usuario según las preferencias
     private void aplicarModo() {
-        String fondoSeleccionado = sharedPreferences.getString("fondo", "charmander");
-        String idiomaSeleccionado = sharedPreferences.getString("idioma", "español");
-        String letraSeleccionada = sharedPreferences.getString("letra", "sans-serif");
+        String fondoSeleccionado = sharedPreferences.getString("fondo", "Charmander");
+        String idiomaSeleccionado = sharedPreferences.getString("idioma", "Español");
+        String letraSeleccionada = sharedPreferences.getString("letra", "Sans-serif");
 
-        // Cambiar el fondo según la selección
-        if (fondoSeleccionado.equals("charmander")) {
-            setFondo(R.drawable.charmander);
-        } else if (fondoSeleccionado.equals("bulbasaur")) {
-            setFondo(R.drawable.bulbasaur);
-        } else if (fondoSeleccionado.equals("squirtle")) {
-            setFondo(R.drawable.squirtle);
-        }
+        // Cambiar texto e imagen
+        actualizarTextoSegunIdioma(idiomaSeleccionado);
+        actualizarFondo(fondoSeleccionado);
+        aplicarTipoLetra(letraSeleccionada);
 
-        // Cambiar idioma - solo muestra un Toast como ejemplo
-        Toast.makeText(this, "Idioma seleccionado: " + idiomaSeleccionado, Toast.LENGTH_SHORT).show();
-
-        // Cambiar tipo de letra
-        Typeface tipoLetra;
-        if (letraSeleccionada.equals("Sans-serif")) {
-            tipoLetra = Typeface.SANS_SERIF;
-        } else if (letraSeleccionada.equals("Monospace")) {
-            tipoLetra = Typeface.MONOSPACE;
-        } else {
-            tipoLetra = Typeface.SERIF;
-        }
-
-        // Aplicar el tipo de letra a los elementos de la UI
-        aplicarTipoLetra(tipoLetra);
+        Toast.makeText(this, "Modo aplicado", Toast.LENGTH_SHORT).show();
     }
 
-    private void aplicarTipoLetra(Typeface tipoLetra) {
-        // Cambiar el tipo de letra de los botones
-        btnModificar.setTypeface(tipoLetra);
-        btnAplicar.setTypeface(tipoLetra);
-        btnResetear.setTypeface(tipoLetra);
-
-        // Cambiar el tipo de letra de los Spinners
-        setSpinnerFont(spinnerFondo, tipoLetra);
-        setSpinnerFont(spinnerIdioma, tipoLetra);
-        setSpinnerFont(spinnerTipoLetra, tipoLetra);
-    }
-
-    // Método auxiliar para cambiar la fuente de un Spinner
-    private void setSpinnerFont(Spinner spinner, Typeface tipoLetra) {
-        // Obtener el adaptador del Spinner
-        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
-
-        // Cambiar el tipo de letra del adaptador para que se aplique a los elementos en el Spinner
-        if (adapter != null) {
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            TextView view = new TextView(getApplicationContext());
-            view.setTypeface(tipoLetra); // Cambia el tipo de letra del texto en el Spinner
-        }
-    }
-
-
-
-    // Restablecer preferencias a los valores predeterminados del archivo settings.xml (valores de fábrica)
     private void resetearModo() {
-        SharedPreferences prefsDefault = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editorDefault = prefsDefault.edit();
+        // Solo restablecer el idioma y tipo de letra a sus valores por defecto
+        editor.putString("idioma", "Español"); // Idioma español
+        editor.putString("letra", "Sans-serif"); // Letra por defecto
+        editor.apply();
 
-        editorDefault.putString("fondo", "charmander");
-        editorDefault.putString("idioma", "español");
-        editorDefault.putString("letra", "sans-serif");
-        editorDefault.apply();
-
-        cargarPreferencias(); // Volver a cargar las preferencias para actualizarlas en la UI
+        cargarPreferencias(); // Recargar las preferencias (aplicará los valores actuales)
+        Toast.makeText(this, "Preferencias restablecidas", Toast.LENGTH_SHORT).show();
     }
 
-    // Cambiar el fondo de pantalla
-    private void setFondo(int recursoImagen) {
-        // Cambiar el fondo de la pantalla de la actividad
-        getWindow().getDecorView().setBackgroundResource(recursoImagen);
+
+    private void inicializarTraducciones() {
+        traducciones = new HashMap<>();
+
+        HashMap<String, String> espanol = new HashMap<>();
+        espanol.put("btnModificar", "Modificar Parámetros");
+        espanol.put("btnAplicar", "Aplicar Modo");
+        espanol.put("btnResetear", "Resetear Modo");
+
+        HashMap<String, String> ingles = new HashMap<>();
+        ingles.put("btnModificar", "Modify Parameters");
+        ingles.put("btnAplicar", "Apply Mode");
+        ingles.put("btnResetear", "Reset Mode");
+
+        HashMap<String, String> frances = new HashMap<>();
+        frances.put("btnModificar", "Modifier les Paramètres");
+        frances.put("btnAplicar", "Appliquer le Mode");
+        frances.put("btnResetear", "Réinitialiser le Mode");
+
+        traducciones.put("Español", espanol);
+        traducciones.put("Inglés", ingles);
+        traducciones.put("Francés", frances);
     }
 
-    // Obtener el índice del valor seleccionado en el Spinner
+    private void actualizarTextoSegunIdioma(String idioma) {
+        HashMap<String, String> textos = traducciones.get(idioma);
+        if (textos != null) {
+            btnModificar.setText(textos.get("btnModificar"));
+            btnAplicar.setText(textos.get("btnAplicar"));
+            btnResetear.setText(textos.get("btnResetear"));
+        }
+    }
+
+    private void actualizarFondo(String fondo) {
+        switch (fondo) {
+            case "Charmander":
+                getWindow().setBackgroundDrawableResource(R.drawable.charmander);
+                break;
+            case "Bulbasaur":
+                getWindow().setBackgroundDrawableResource(R.drawable.bulbasaur);
+                break;
+            case "Squirtle":
+                getWindow().setBackgroundDrawableResource(R.drawable.squirtle);
+                break;
+            default:
+                getWindow().setBackgroundDrawableResource(R.drawable.blanco); // Fallback opcional
+                break;
+        }
+    }
+
+    private void aplicarTipoLetra(String letra) {
+        Typeface tipoFuente;
+        switch (letra) {
+            case "Sans-serif":
+                tipoFuente = Typeface.SANS_SERIF;
+                break;
+            case "Monospace":
+                tipoFuente = Typeface.MONOSPACE;
+                break;
+            case "Serif":
+                tipoFuente = Typeface.SERIF;
+                break;
+            default:
+                tipoFuente = Typeface.DEFAULT;
+        }
+        btnModificar.setTypeface(tipoFuente);
+        btnAplicar.setTypeface(tipoFuente);
+        btnResetear.setTypeface(tipoFuente);
+    }
+
     private int getIndex(String value, String[] array) {
         for (int i = 0; i < array.length; i++) {
-            if (array[i].equalsIgnoreCase(value)) {
+            if (array[i].equals(value)) {
                 return i;
             }
         }
