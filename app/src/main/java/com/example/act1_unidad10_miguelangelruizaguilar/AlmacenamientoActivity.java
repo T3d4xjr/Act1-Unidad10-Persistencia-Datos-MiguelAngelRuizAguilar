@@ -6,9 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,27 +17,23 @@ public class AlmacenamientoActivity extends AppCompatActivity {
     private TextView textView;
     private Button btnGuardar, btnRecuperar;
 
-    private static final String FILE_NAME = "almacenamiento_datos.txt"; // Nombre del archivo
+    private static final String FILE_NAME = "almacenamiento_datos.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_almacenamiento);
 
-        // Referencias a los UI
         editText = findViewById(R.id.editText);
         textView = findViewById(R.id.textView);
         btnGuardar = findViewById(R.id.btnGuardar);
         btnRecuperar = findViewById(R.id.btnRecuperar);
 
-        // Acción del botón "Guardar"
         btnGuardar.setOnClickListener(v -> guardarDatos());
 
-        // Acción del botón "Recuperar"
         btnRecuperar.setOnClickListener(v -> recuperarDatos());
     }
 
-    // Método para guardar los datos en almacenamiento interno
     private void guardarDatos() {
         String datos = editText.getText().toString();
 
@@ -56,14 +50,13 @@ public class AlmacenamientoActivity extends AppCompatActivity {
         }
     }
 
-    // Método para recuperar los datos del almacenamiento interno
     private void recuperarDatos() {
         try (FileInputStream fis = openFileInput(FILE_NAME)) {
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
             String datos = new String(buffer);
 
-            textView.setText(datos); // Mostrar en TextView
+            textView.setText(datos);
             Toast.makeText(this, "Datos recuperados correctamente", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- EditText donde el usuario ingresará el texto -->
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
@@ -13,7 +12,6 @@
         android:padding="8dp"
         android:layout_marginBottom="20dp" />
 
-    <!-- Botón Guardar -->
     <Button
         android:id="@+id/btnGuardar"
         android:layout_width="wrap_content"
@@ -23,7 +21,6 @@
         android:layout_alignParentLeft="true"
         android:layout_marginEnd="10dp"/>
 
-    <!-- Botón Recuperar -->
     <Button
         android:id="@+id/btnRecuperar"
         android:layout_width="wrap_content"
@@ -32,7 +29,6 @@
         android:layout_below="@id/editText"
         android:layout_alignParentRight="true" />
 
-    <!-- TextView donde se mostrará el contenido recuperado -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

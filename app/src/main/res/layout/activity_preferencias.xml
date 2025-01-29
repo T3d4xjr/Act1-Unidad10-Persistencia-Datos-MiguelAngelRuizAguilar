@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".PreferenciasActivity">
 
-    <!-- Spinner para el Fondo -->
     <Spinner
         android:id="@+id/spinnerFondo"
         android:layout_width="wrap_content"
@@ -16,7 +15,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <!-- Spinner para el Idioma -->
     <Spinner
         android:id="@+id/spinnerIdioma"
         android:layout_width="wrap_content"
@@ -26,7 +24,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <!-- Spinner para el Tipo de Letra -->
     <Spinner
         android:id="@+id/spinnerTipoLetra"
         android:layout_width="wrap_content"

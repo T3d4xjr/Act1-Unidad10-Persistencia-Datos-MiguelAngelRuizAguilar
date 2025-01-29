@@ -21,7 +21,7 @@ public class PreferenciasActivity extends AppCompatActivity {
     private Button btnModificar;
     private Button btnAplicar;
     private Button btnResetear;
-    private RelativeLayout layoutPrincipal; // Contenedor principal donde se aplicará el fondo
+    private RelativeLayout layoutPrincipal;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -37,7 +37,6 @@ public class PreferenciasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferencias);
 
-        // Referencias a los UI
         spinnerFondo = findViewById(R.id.spinnerFondo);
         spinnerIdioma = findViewById(R.id.spinnerIdioma);
         spinnerTipoLetra = findViewById(R.id.spinnerTipoLetra);
@@ -45,14 +44,11 @@ public class PreferenciasActivity extends AppCompatActivity {
         btnAplicar = findViewById(R.id.btnAplicar);
         btnResetear = findViewById(R.id.btnResetear);
 
-        // Inicializar SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
 
-        // Inicializar traducciones
         inicializarTraducciones();
 
-        // Crear adaptadores para los Spinners
         ArrayAdapter<String> adapterFondo = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fondos);
         ArrayAdapter<String> adapterIdioma = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, idiomas);
         ArrayAdapter<String> adapterLetra = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, letras);
@@ -65,23 +61,26 @@ public class PreferenciasActivity extends AppCompatActivity {
         spinnerIdioma.setAdapter(adapterIdioma);
         spinnerTipoLetra.setAdapter(adapterLetra);
 
-        // Cargar las preferencias guardadas en los Spinners
         cargarPreferencias();
 
-        // Configuración del botón "Modificar Parámetros"
         btnModificar.setOnClickListener(v -> guardarPreferencias());
 
-        // Configuración del botón "Aplicar Modo"
         btnAplicar.setOnClickListener(v -> aplicarModo());
 
-        // Configuración del botón "Resetear Modo"
         btnResetear.setOnClickListener(v -> resetearModo());
     }
 
     private void cargarPreferencias() {
-        String fondo = sharedPreferences.getString("fondo", "Charmander");
+        String fondo = sharedPreferences.getString("fondo", "blanco");
         String idioma = sharedPreferences.getString("idioma", "Español");
         String letra = sharedPreferences.getString("letra", "Sans-serif");
+
+
+        if (fondo.equals("blanco") && idioma.equals("Español") && letra.equals("Sans-serif")) {
+            getWindow().setBackgroundDrawableResource(R.drawable.blanco);
+            aplicarTipoLetra("Sans-serif");
+            actualizarTextoSegunIdioma("Español");
+        }
 
         spinnerFondo.setSelection(getIndex(fondo, fondos));
         spinnerIdioma.setSelection(getIndex(idioma, idiomas));
@@ -109,7 +108,6 @@ public class PreferenciasActivity extends AppCompatActivity {
         String idiomaSeleccionado = sharedPreferences.getString("idioma", "Español");
         String letraSeleccionada = sharedPreferences.getString("letra", "Sans-serif");
 
-        // Cambiar texto e imagen
         actualizarTextoSegunIdioma(idiomaSeleccionado);
         actualizarFondo(fondoSeleccionado);
         aplicarTipoLetra(letraSeleccionada);
@@ -118,15 +116,17 @@ public class PreferenciasActivity extends AppCompatActivity {
     }
 
     private void resetearModo() {
-        // Solo restablecer el idioma y tipo de letra a sus valores por defecto
-        editor.putString("idioma", "Español"); // Idioma español
-        editor.putString("letra", "Sans-serif"); // Letra por defecto
+        getWindow().setBackgroundDrawableResource(R.drawable.blanco);
+
+        editor.putString("fondo", "blanco");
+        editor.putString("idioma", "Español");
+        editor.putString("letra", "Sans-serif");
         editor.apply();
 
-        cargarPreferencias(); // Recargar las preferencias (aplicará los valores actuales)
+        cargarPreferencias();
+
         Toast.makeText(this, "Preferencias restablecidas", Toast.LENGTH_SHORT).show();
     }
-
 
     private void inicializarTraducciones() {
         traducciones = new HashMap<>();
@@ -172,7 +172,7 @@ public class PreferenciasActivity extends AppCompatActivity {
                 getWindow().setBackgroundDrawableResource(R.drawable.squirtle);
                 break;
             default:
-                getWindow().setBackgroundDrawableResource(R.drawable.blanco); // Fallback opcional
+                getWindow().setBackgroundDrawableResource(R.drawable.blanco);
                 break;
         }
     }

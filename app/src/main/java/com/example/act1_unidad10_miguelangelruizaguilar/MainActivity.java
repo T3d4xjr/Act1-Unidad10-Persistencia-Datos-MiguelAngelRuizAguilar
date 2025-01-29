@@ -16,15 +16,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Configurar la Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Referencia a los botones
         Button buttonPreferencias = findViewById(R.id.button_preferencias);
         Button buttonAlmacenamiento = findViewById(R.id.button_almacenamiento);
 
-        // Eventos de clic para botones
         buttonPreferencias.setOnClickListener(v -> {
             Intent intent = new Intent(this, PreferenciasActivity.class);
             startActivity(intent);
