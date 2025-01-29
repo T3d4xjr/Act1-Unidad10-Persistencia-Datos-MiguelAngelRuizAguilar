@@ -2,40 +2,63 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="24dp"
+    android:background="#EFEFEF">
 
+    <!-- EditText donde el usuario ingresará el texto -->
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Ingresa algo aquí"
-        android:padding="8dp"
-        android:layout_marginBottom="20dp" />
+        android:padding="12dp"
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:background="@android:drawable/edit_text"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:layout_alignParentTop="true" />
 
+    <!-- Botón Guardar -->
     <Button
         android:id="@+id/btnGuardar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="Guardar"
+        android:textColor="#FFFFFF"
         android:layout_below="@id/editText"
+        android:layout_marginTop="20dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginEnd="10dp"/>
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/holo_blue_dark"
+        android:textSize="16sp"
+        android:gravity="center" />
 
+    <!-- Botón Recuperar -->
     <Button
         android:id="@+id/btnRecuperar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="Recuperar"
+        android:textColor="#FFFFFF"
         android:layout_below="@id/editText"
-        android:layout_alignParentRight="true" />
+        android:layout_marginTop="20dp"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/holo_green_dark"
+        android:textSize="16sp"
+        android:gravity="center" />
 
+    <!-- TextView donde se mostrará el contenido recuperado -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnGuardar"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:text="Texto recuperado aparecerá aquí"
-        android:textSize="16sp" />
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
 </RelativeLayout>

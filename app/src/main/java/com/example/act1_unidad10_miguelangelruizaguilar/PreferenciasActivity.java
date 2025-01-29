@@ -76,7 +76,7 @@ public class PreferenciasActivity extends AppCompatActivity {
         String letra = sharedPreferences.getString("letra", "Sans-serif");
 
 
-        if (fondo.equals("blanco") && idioma.equals("Español") && letra.equals("Sans-serif")) {
+        if (fondo.equals("blanco") && idioma.equals("Epsañol") && letra.equals("Sans-serif")) {
             getWindow().setBackgroundDrawableResource(R.drawable.blanco);
             aplicarTipoLetra("Sans-serif");
             actualizarTextoSegunIdioma("Español");
