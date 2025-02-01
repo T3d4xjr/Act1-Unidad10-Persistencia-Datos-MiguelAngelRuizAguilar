@@ -22,6 +22,7 @@ public class PreferenciasActivity extends AppCompatActivity {
     private Button btnAplicar;
     private Button btnResetear;
     private RelativeLayout layoutPrincipal;
+    private Button btnAtras;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -43,7 +44,6 @@ public class PreferenciasActivity extends AppCompatActivity {
         btnModificar = findViewById(R.id.btnModificar);
         btnAplicar = findViewById(R.id.btnAplicar);
         btnResetear = findViewById(R.id.btnResetear);
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
 
@@ -61,33 +61,9 @@ public class PreferenciasActivity extends AppCompatActivity {
         spinnerIdioma.setAdapter(adapterIdioma);
         spinnerTipoLetra.setAdapter(adapterLetra);
 
-        cargarPreferencias();
-
         btnModificar.setOnClickListener(v -> guardarPreferencias());
-
         btnAplicar.setOnClickListener(v -> aplicarModo());
-
         btnResetear.setOnClickListener(v -> resetearModo());
-    }
-
-    private void cargarPreferencias() {
-        String fondo = sharedPreferences.getString("fondo", "blanco");
-        String idioma = sharedPreferences.getString("idioma", "Español");
-        String letra = sharedPreferences.getString("letra", "Sans-serif");
-
-
-        if (fondo.equals("blanco") && idioma.equals("Epsañol") && letra.equals("Sans-serif")) {
-            getWindow().setBackgroundDrawableResource(R.drawable.blanco);
-            aplicarTipoLetra("Sans-serif");
-            actualizarTextoSegunIdioma("Español");
-        }
-
-        spinnerFondo.setSelection(getIndex(fondo, fondos));
-        spinnerIdioma.setSelection(getIndex(idioma, idiomas));
-        spinnerTipoLetra.setSelection(getIndex(letra, letras));
-
-        actualizarFondo(fondo);
-        aplicarTipoLetra(letra);
     }
 
     private void guardarPreferencias() {
@@ -104,7 +80,7 @@ public class PreferenciasActivity extends AppCompatActivity {
     }
 
     private void aplicarModo() {
-        String fondoSeleccionado = sharedPreferences.getString("fondo", "Charmander");
+        String fondoSeleccionado = sharedPreferences.getString("fondo", "blanco");
         String idiomaSeleccionado = sharedPreferences.getString("idioma", "Español");
         String letraSeleccionada = sharedPreferences.getString("letra", "Sans-serif");
 
@@ -118,12 +94,18 @@ public class PreferenciasActivity extends AppCompatActivity {
     private void resetearModo() {
         getWindow().setBackgroundDrawableResource(R.drawable.blanco);
 
+        editor.clear(); // Borra todas las preferencias guardadas
         editor.putString("fondo", "blanco");
         editor.putString("idioma", "Español");
         editor.putString("letra", "Sans-serif");
         editor.apply();
 
-        cargarPreferencias();
+        spinnerFondo.setSelection(0); // Reinicia el spinner al primer elemento
+        spinnerIdioma.setSelection(0);
+        spinnerTipoLetra.setSelection(0);
+
+        aplicarTipoLetra("Sans-serif");
+        actualizarTextoSegunIdioma("Español");
 
         Toast.makeText(this, "Preferencias restablecidas", Toast.LENGTH_SHORT).show();
     }
@@ -195,14 +177,5 @@ public class PreferenciasActivity extends AppCompatActivity {
         btnModificar.setTypeface(tipoFuente);
         btnAplicar.setTypeface(tipoFuente);
         btnResetear.setTypeface(tipoFuente);
-    }
-
-    private int getIndex(String value, String[] array) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].equals(value)) {
-                return i;
-            }
-        }
-        return 0;
     }
 }
